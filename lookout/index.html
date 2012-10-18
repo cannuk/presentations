@@ -38,45 +38,42 @@
 
 
 <section class="slide" id="my-background">
-    <h2>Background Information</h2>
-    <ul class="slide">
-        <li><h3>A recent transplant from Arizona</h3></li>
-        <li><h3></h3></li>
+    <h2>About me</h2>
+    <ul>
+        <li class="slide"><h3>A recent transplant from Arizona.</h3></li>
+        <li class="slide"><h3>In my 28 years in Arizona it was <span style="color: #6495ed">foggy</span> twice.</h3></li>
+        <li class="slide"><h3>Never moving back because <span style="color: #6495ed">fog</span> &gt; <span style="color: #ff0000;">heat</span>.</h3></li>
+    </ul>
+
+</section>
+
+<section class="slide" id="my-background-2">
+    <h2>About me</h2>
+    <ul>
+        <li class="slide"><h3>Over 10 years of professional experience in creating web applications (front and backend).</h3></li>
+        <li class="slide"><h3>A passion for great user experience and pushing forward web application development.</h3></li>
+        <li class="slide"><h3>Hobbies include barbecue (low & slow) and exploring the bay area with my family.</h3></li>
     </ul>
 
 </section>
 
 
-<section class="slide" id="modular-programming-definition">
-	<h2>What is a Module?</h2>
-	<dl class="slide">
-		<dt>Modular Programming</dt>
-		<cite>(<a href="http://en.wikipedia.org/wiki/Software_module">http://en.wikipedia.org/wiki/Software_module</a>)</cite>
-		<dl>A software design technique that increases the extent to which software is composed of separate, interchangeable components called modules
-			 each of which accomplishes one function and contains everything necessary to accomplish this.
-		</dl>
-		<dl>
-			Modules represent a separation of concerns, and improve maintainability by enforcing logical boundaries between components.
-		</dl>
-	</dl>
-	
-</section>
-
 <section class="slide" id="module-checklist">
-	<h2>A Javascript module checklist:</h2>
+	<h2>A JavaScript module checklist</h2>
+    <p>A simple pattern to give us the following:</p>
 	<ul>
-		<li class="slide"><h3>Keep code out of the global namespace.</h3></li>
+		<li class="slide"><h3>Keep code out of the global (window) namespace.</h3></li>
 		<li class="slide"><h3>Make code encapsulated & reusable.</h3></li>
 		<li class="slide"><h3>Provide a mechanism for private level methods and properties.</h3></li>
-		<li class="slide"><h3>Manage dependencies between Modules (loading and performance/minification).</h3></li>
+		<li class="slide"><h3>Manage dependencies between modules.</h3></li>
 	</ul>
 </section>
 
 
 <section class="slide" id="javsascript-lacks-modules">
-    <h2>How do we create modules in Javascript?</h3>
-	<h3>Javascript does not have a language defined mechanism for modularity.</h2>
-	<h3 class="slide">We must use the flexibility and expressive power of Javascript to create our own module pattern.</h3>
+    <h2>How do we create modules in JavaScript?</h3>
+	<h3>JavaScript does not have a language defined mechanism for modularity.</h2>
+	<h3 class="slide">We must use the flexibility and expressive power of JavaScript to create our own module pattern.</h3>
 </section>
 
 
@@ -101,13 +98,13 @@ console.log('boatCount = ' + boatCount);
     <p></p>
 </section>
 
-<section class="slide" id="module-checklist">
+<section class="slide" id="module-checklist-2">
 	<h2>This code accomplishes nothing on the checklist</h2>
 	<ul>
 		<li style="text-decoration: line-through;"><h3>Keep code out of the global namespace.</h3></li>
 		<li style="text-decoration: line-through;"><h3>Make code encapsulated & reusable.</h3></li>
 		<li style="text-decoration: line-through;"><h3>Provide a mechanism for private level methods and properties.</h3></li>
-		<li style="text-decoration: line-through;"><h3>Manage dependencies between Modules (loading and performance/minification).</h3></li>
+		<li style="text-decoration: line-through;"><h3>Manage dependencies between modules.</h3></li>
 	</ul>
 </section>
 
@@ -115,26 +112,24 @@ console.log('boatCount = ' + boatCount);
 
 <section class="slide" id="step-1-literals">
 	<h2>Step 1: Object literals</h2>
-	<p>This is the most basic form of modularity in Javascript.</p>
+	<p>This is the most basic form of modularity in JavaScript.</p>
 	<div>
       <textarea name="code" theme="ambiance" class="code" mode="javascript" style="display: none;" runnable="true">
 //encapsulating into the object literal BoatDock
 var BoatDock = {
 	boatCount: 0,
-	tally: function(){
-		this.boatCount++;
-	}
+	tally: function(){ this.boatCount++; }
 }
-
-console.log('BoatDock.boatCount = ' + BoatDock.boatCount);
 console.log('global boatCount is ' + typeof(boatCount));
 BoatDock.tally();
+console.log('BoatDock.boatCount = ' + BoatDock.boatCount);
+BoatDock.boatCount = 'A string again';
 console.log('BoatDock.boatCount = ' + BoatDock.boatCount);
       </textarea>
     </div>
 </section>
 
-<section class="slide" id="module-checklist">
+<section class="slide" id="module-checklist-3">
 	<h2>Step 1: Object literals</h2>
 	<ul>
 		<li><h3><span style="text-decoration: line-through;">Keep code out of</span> Less code in the global namespace.</h3></li>
@@ -142,10 +137,18 @@ console.log('BoatDock.boatCount = ' + BoatDock.boatCount);
 	</ul>
 	<ul class="slide">
 		<li style="text-decoration: line-through;"><h3>Provide a mechanism for private level methods and properties.</h3></li>
-		<li style="text-decoration: line-through;"><h3>Manage dependencies between Modules (loading and performance/minification).</h3></li>
+		<li style="text-decoration: line-through;"><h3>Manage dependencies between modules.</h3></li>
 	</ul>
 </section>
 
+<section class="slide" id="adding-closure">
+    <h2>Step 2: Adding closure</h2>
+    <ul>
+        <li><h3>Javascript uses function level scoping.</h3></li>
+        <li><h3>Scope exists as long as a reference to variables remain.</h3></li>
+        <li><h3>We can use this to simulate private level access.</h3></li>
+    </ul>
+</section>
 
 <section class="slide" id="step-2-self-executing">
 	<h2>Step 2: Adding closure</h2>
@@ -154,61 +157,35 @@ console.log('BoatDock.boatCount = ' + BoatDock.boatCount);
 var BoatDock = (function(){
 	var boatCount = 0;
 	return {
-		tally: function(){
-			boatCount++;
-		},
-		getBoatCount: function(){ 
-			return boatCount;
-		}
+		tally: function(){ boatCount++; },
+		getBoatCount: function(){ return boatCount; }
 	}
 })();
-console.log('BoatDock.getBoatCount = ' + BoatDock.getBoatCount());
-console.log('typeof BoatDock.boatCount = ' + typeof BoatDock.boatCount);
+console.log('BoatDock.getBoatCount() = ' + BoatDock.getBoatCount());
 BoatDock.tally();
-console.log('BoatDock.getBoatCount = ' + BoatDock.getBoatCount());</textarea>
+console.log('BoatDock.getBoatCount() = ' + BoatDock.getBoatCount());
+console.log('global boatCount = ' + typeof(boatCount));</textarea>
     </div>
 </section>
 
-<section class="slide" id="module-checklist">
+<section class="slide" id="module-checklist-4">
 	<h2>Step 2: Adding closure</h2>
 	<ul>
 		<li><h3>Keep code out of the global namespace.</h3></li>
 		<li><h3>Make code encapsulated & reusable.</h3></li>
 		<li><h3>Provide a mechanism for private level methods and properties.</h3></li>
+        <li style="text-decoration: line-through;"><h3>Manage dependencies between modules.</h3></li>
 	</ul>
-</section>
-
-<section class="slide" id="problems-still-exist">
-	<h2>Still a few problems exist</h2>
-	<ul>
-		<li><h3>How do we structure our code with multiple namespaces?</h3></li>
-		<li><h3>How do we load other dependencies</h3></li>
-		<li><h3>How do we optimize separation of modules but limit http requests?</h3></li>
-	</ul>
-	<div>
-      <textarea name="code" theme="ambiance" class="code" mode="javascript" style="display: none;" runnable="true">
-Marina.BoatDock.getBoatCount(); //very verbose
-	  </textarea>
-	</div>
 </section>
 
 <section class="slide" id="amd-overview">
 	<h2>Asynchronous Module Definition (AMD)</h2>
 	<p>A high level overview</p>
 	<ul>
+        <li><h3>One standard attempting to define a pattern for modules and their dependencies.</h3></li>
 		<li><h3>Provide a require mechanism (to include other modules).</h3></li>
 		<li><h3>Optimize load for the environment (development vs. production).</h3></li>
-		<li><h3>Eliminate the need for verbose namespacing.</h3></li>
 		<li><h3>Can load module dependencies asynchronously.</h3></li>
-	</ul>
-</section>
-
-<section class="slide" id="amd-optimization">
-	<h2>Asynchronous Module Definition (AMD)</h2>
-	<p>Optimization overview</p>
-	<ul>
-		<li><h3>In Development all dependencies are loaded individually over many HTTP requests.</h3></li>
-		<li><h3>In production a build system is used to minify and combine module files and dependencies.</h3></li>
 	</ul>
 </section>
 
@@ -219,21 +196,31 @@ Marina.BoatDock.getBoatCount(); //very verbose
 define('BoatDock', //name the module (optional)
 	['../boat'], //an array of dependencies
 	function(Boat){ //Module code is in a callback, called after dependencies load
-		
 		var boatCount = 0;
 		var BoatDock = {
-			tally: function(){
-				boatCount++;
-			},
-			getBoatCount: function(){ 
-				return boatCount;
-			}
+			tally: function(){ boatCount++; },
+			getBoatCount: function(){ return boatCount; }
 		};
 		return BoatDock;
-	}
-);
+	});
 	  </textarea>
 	</div>
+</section>
+
+<section class="slide" id="amd-pros">
+    <h2>AMD pros</h2>
+    <ul>
+        <li><h3>Creates an include/require mechanism better than individual script tags</h3></li>
+        <li><h3>Manages loading order of scripts/dependencies</h3></li>
+    </ul>
+</section>
+
+<section class="slide" id="amd-cons">
+    <h2>AMD cons</h2>
+    <ul>
+        <li><h3>Might be unnecessary in smaller projects with asset management (like rails)</h3></li>
+        <li><h3>Requires a somewhat cumbersome syntax for wrapping modules.</h3></li>
+    </ul>
 </section>
 
 <section class="slide" id="amd-gives-us">
@@ -242,7 +229,7 @@ define('BoatDock', //name the module (optional)
 		<li><h3>Keep code out of the global namespace.</h3></li>
 		<li><h3>Make code encapsulated & reusable.</h3></li>
 		<li><h3>Provide a mechanism for private level methods and properties.</h3></li>
-		<li><h3>Manage dependencies between Modules (loading and performance/minification).</h3></li>
+		<li><h3>Manage dependencies between modules.</h3></li>
 	</ul>
 </section>
 
@@ -284,8 +271,8 @@ define('BoatDock', //name the module (optional)
 
 <!-- Syntax highlighting Modes -->
 
-<!-- javascript -->
-<script src="../extensions/codemirror/mode/javascript/javascript.js"></script>
+<!-- JavaScript -->
+<script src="../extensions/codemirror/mode/JavaScript/JavaScript.js"></script>
 
 <link rel="stylesheet" href="../extensions/codemirror/themes/ambiance.css">
 
