@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	
+	<title>Modular JavaScript</title>
+	
+
+	<!-- Core and extension CSS files -->
+	<link rel="stylesheet" href="../core/deck.core.css">
+	<link rel="stylesheet" href="../extensions/goto/deck.goto.css">
+	<link rel="stylesheet" href="../extensions/menu/deck.menu.css">
+	<link rel="stylesheet" href="../extensions/status/deck.status.css">
+	<link rel="stylesheet" href="../extensions/hash/deck.hash.css">
+	<link rel="stylesheet" href="../extensions/scale/deck.scale.css">
+	
+	<!-- Style theme. More available in /themes/style/ or create your own. -->
+	<link rel="stylesheet" href="../themes/lookout/style/lookout.css">
+	
+	<!-- Transition theme. More available in /themes/transition/ or create your own. -->
+	<link rel="stylesheet" href="../themes/transition/horizontal-slide.css">	
+	
+	<script src="../modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<!-- Begin slides -->
+<section class="slide" id="title-slide">
+	
+	<div class="block-title-info">
+        <div class="large-logo"></div>
+		<h1 data-presentation-meta="title">Modular JavaScript: Patterns and Practices</h1>
+	</div>
+	
+	
+</section>
+
+
+<section class="slide" id="my-background">
+    <h2>Background Information</h2>
+    <ul class="slide">
+        <li><h3>A recent transplant from Arizona</h3></li>
+        <li><h3></h3></li>
+    </ul>
+
+</section>
+
+
+<section class="slide" id="modular-programming-definition">
+	<h2>What is a Module?</h2>
+	<dl class="slide">
+		<dt>Modular Programming</dt>
+		<cite>(<a href="http://en.wikipedia.org/wiki/Software_module">http://en.wikipedia.org/wiki/Software_module</a>)</cite>
+		<dl>A software design technique that increases the extent to which software is composed of separate, interchangeable components called modules
+			 each of which accomplishes one function and contains everything necessary to accomplish this.
+		</dl>
+		<dl>
+			Modules represent a separation of concerns, and improve maintainability by enforcing logical boundaries between components.
+		</dl>
+	</dl>
+	
+</section>
+
+<section class="slide" id="module-checklist">
+	<h2>A Javascript module checklist:</h2>
+	<ul>
+		<li class="slide"><h3>Keep code out of the global namespace.</h3></li>
+		<li class="slide"><h3>Make code encapsulated & reusable.</h3></li>
+		<li class="slide"><h3>Provide a mechanism for private level methods and properties.</h3></li>
+		<li class="slide"><h3>Manage dependencies between Modules (loading and performance/minification).</h3></li>
+	</ul>
+</section>
+
+
+<section class="slide" id="javsascript-lacks-modules">
+    <h2>How do we create modules in Javascript?</h3>
+	<h3>Javascript does not have a language defined mechanism for modularity.</h2>
+	<h3 class="slide">We must use the flexibility and expressive power of Javascript to create our own module pattern.</h3>
+</section>
+
+
+<section class="slide" id="doing-it-wrong">
+	<h2>But first, what not to do:</h2>
+    <p>In the beginning, everything was global.</p>
+	<div>
+      <textarea name="code" theme="ambiance" class="code" mode="javascript" style="display: none;" runnable="true">
+//variable exists in the window (global) scope
+var boatCount = 0;
+function tallyBoat() {
+	//any code can access the boatCount variable
+	boatCount++;
+}
+console.log('boatCount = ' + boatCount);
+tallyBoat();
+//boatCount = "Now I am a string!";
+//tallyBoat();
+console.log('boatCount = ' + boatCount);
+      </textarea>
+    </div>
+    <p></p>
+</section>
+
+<section class="slide" id="module-checklist">
+	<h2>This code accomplishes nothing on the checklist</h2>
+	<ul>
+		<li style="text-decoration: line-through;"><h3>Keep code out of the global namespace.</h3></li>
+		<li style="text-decoration: line-through;"><h3>Make code encapsulated & reusable.</h3></li>
+		<li style="text-decoration: line-through;"><h3>Provide a mechanism for private level methods and properties.</h3></li>
+		<li style="text-decoration: line-through;"><h3>Manage dependencies between Modules (loading and performance/minification).</h3></li>
+	</ul>
+</section>
+
+
+
+<section class="slide" id="step-1-literals">
+	<h2>Step 1: Object literals</h2>
+	<p>This is the most basic form of modularity in Javascript.</p>
+	<div>
+      <textarea name="code" theme="ambiance" class="code" mode="javascript" style="display: none;" runnable="true">
+//encapsulating into the object literal BoatDock
+var BoatDock = {
+	boatCount: 0,
+	tally: function(){
+		this.boatCount++;
+	}
+}
+
+console.log('BoatDock.boatCount = ' + BoatDock.boatCount);
+console.log('global boatCount is ' + typeof(boatCount));
+BoatDock.tally();
+console.log('BoatDock.boatCount = ' + BoatDock.boatCount);
+      </textarea>
+    </div>
+</section>
+
+<section class="slide" id="module-checklist">
+	<h2>Step 1: Object literals</h2>
+	<ul>
+		<li><h3><span style="text-decoration: line-through;">Keep code out of</span> Less code in the global namespace.</h3></li>
+		<li><h3>Make code encapsulated & <span style="text-decoration: line-through;">reusable</span>.</h3></li>
+	</ul>
+	<ul class="slide">
+		<li style="text-decoration: line-through;"><h3>Provide a mechanism for private level methods and properties.</h3></li>
+		<li style="text-decoration: line-through;"><h3>Manage dependencies between Modules (loading and performance/minification).</h3></li>
+	</ul>
+</section>
+
+
+<section class="slide" id="step-2-self-executing">
+	<h2>Step 2: Adding closure</h2>
+	<div>
+      <textarea name="code" theme="ambiance" class="code" mode="javascript" style="display: none;" runnable="true">
+var BoatDock = (function(){
+	var boatCount = 0;
+	return {
+		tally: function(){
+			boatCount++;
+		},
+		getBoatCount: function(){ 
+			return boatCount;
+		}
+	}
+})();
+console.log('BoatDock.getBoatCount = ' + BoatDock.getBoatCount());
+console.log('typeof BoatDock.boatCount = ' + typeof BoatDock.boatCount);
+BoatDock.tally();
+console.log('BoatDock.getBoatCount = ' + BoatDock.getBoatCount());</textarea>
+    </div>
+</section>
+
+<section class="slide" id="module-checklist">
+	<h2>Step 2: Adding closure</h2>
+	<ul>
+		<li><h3>Keep code out of the global namespace.</h3></li>
+		<li><h3>Make code encapsulated & reusable.</h3></li>
+		<li><h3>Provide a mechanism for private level methods and properties.</h3></li>
+	</ul>
+</section>
+
+<section class="slide" id="problems-still-exist">
+	<h2>Still a few problems exist</h2>
+	<ul>
+		<li><h3>How do we structure our code with multiple namespaces?</h3></li>
+		<li><h3>How do we load other dependencies</h3></li>
+		<li><h3>How do we optimize separation of modules but limit http requests?</h3></li>
+	</ul>
+	<div>
+      <textarea name="code" theme="ambiance" class="code" mode="javascript" style="display: none;" runnable="true">
+Marina.BoatDock.getBoatCount(); //very verbose
+	  </textarea>
+	</div>
+</section>
+
+<section class="slide" id="amd-overview">
+	<h2>Asynchronous Module Definition (AMD)</h2>
+	<p>A high level overview</p>
+	<ul>
+		<li><h3>Provide a require mechanism (to include other modules).</h3></li>
+		<li><h3>Optimize load for the environment (development vs. production).</h3></li>
+		<li><h3>Eliminate the need for verbose namespacing.</h3></li>
+		<li><h3>Can load module dependencies asynchronously.</h3></li>
+	</ul>
+</section>
+
+<section class="slide" id="amd-optimization">
+	<h2>Asynchronous Module Definition (AMD)</h2>
+	<p>Optimization overview</p>
+	<ul>
+		<li><h3>In Development all dependencies are loaded individually over many HTTP requests.</h3></li>
+		<li><h3>In production a build system is used to minify and combine module files and dependencies.</h3></li>
+	</ul>
+</section>
+
+<section class="slide" id="a-final-example">
+	<h2>A final example</h2>
+	<div>
+      <textarea name="code" theme="ambiance" class="code" mode="javascript" style="display: none;" runnable="true">
+define('BoatDock', //name the module (optional)
+	['../boat'], //an array of dependencies
+	function(Boat){ //Module code is in a callback, called after dependencies load
+		
+		var boatCount = 0;
+		var BoatDock = {
+			tally: function(){
+				boatCount++;
+			},
+			getBoatCount: function(){ 
+				return boatCount;
+			}
+		};
+		return BoatDock;
+	}
+);
+	  </textarea>
+	</div>
+</section>
+
+<section class="slide" id="amd-gives-us">
+	<h2>AMD completes our checklist</h2>
+	<ul>
+		<li><h3>Keep code out of the global namespace.</h3></li>
+		<li><h3>Make code encapsulated & reusable.</h3></li>
+		<li><h3>Provide a mechanism for private level methods and properties.</h3></li>
+		<li><h3>Manage dependencies between Modules (loading and performance/minification).</h3></li>
+	</ul>
+</section>
+
+<section class="slide" id="questions">
+	<h1>Questions?</h1>
+</section>
+
+
+
+<!-- deck.goto snippet -->
+<form action="." method="get" class="goto-form">
+	<label for="goto-slide">Go to slide:</label>
+	<input type="text" name="slidenum" id="goto-slide" list="goto-datalist">
+	<datalist id="goto-datalist"></datalist>
+	<input type="submit" value="Go">
+</form>
+
+<!-- deck.hash snippet -->
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+
+<!-- Grab CDN jQuery, with a protocol relative URL; fall back to local if offline -->
+<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+<script>window.jQuery || document.write('<script src="../jquery-1.7.min.js"><\/script>')</script>
+
+<!-- Deck Core and extensions -->
+<script src="../core/deck.core.js"></script>
+<script src="../extensions/hash/deck.hash.js"></script>
+<script src="../extensions/menu/deck.menu.js"></script>
+<script src="../extensions/goto/deck.goto.js"></script>
+<script src="../extensions/status/deck.status.js"></script>
+<script src="../extensions/scale/deck.scale.js"></script>
+
+<link rel="stylesheet" href="../extensions/codemirror/deck.codemirror.css">
+
+
+<!-- Base codemiror code -->
+<script src="../extensions/codemirror/codemirror.js"></script>
+
+<!-- Syntax highlighting Modes -->
+
+<!-- javascript -->
+<script src="../extensions/codemirror/mode/javascript/javascript.js"></script>
+
+<link rel="stylesheet" href="../extensions/codemirror/themes/ambiance.css">
+
+<!-- Plugin code -->
+<script src="../extensions/codemirror/deck.codemirror.js"></script>
+
+
+<!-- Initialize the deck -->
+<script>
+$(function() {
+	$.deck('.slide');
+});
+
+$(document).bind('deck.change', function(event, from, to) {
+    if(from === 0 || to === 0){
+        $("#presentation_heading").toggleClass("presentation-heading-slide presentation-heading-title-slide");
+    }
+
+    if(to > 0){
+        $("#presentation_heading .gradient").text($("[data-presentation-meta='title']").text());
+    }
+    else{
+        $("#presentation_heading .gradient").text("");
+    }
+
+});
+
+</script>
+
+</body>
+</html>
