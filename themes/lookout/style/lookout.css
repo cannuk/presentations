@@ -17,20 +17,7 @@
 }
 
 
-.large-logo{
-    background: url(../assets/logo-large.png) no-repeat;
-    background-size: contain;
-    width: 80%;
-    min-height: 150px;
-    margin-top: 40px !important;
-}
 
-
-.CodeMirror, .deck-codemirror-result{
-    background-color: #FFF;
-    -webkit-box-shadow:  4px 4px 40px 4px rgba(153, 153, 153, .5);
-    box-shadow:  4px 4px 40px 4px rgba(153, 153, 153, .5);
-}
 
 textarea{
     background-color: #000;
@@ -54,6 +41,7 @@ textarea{
     color: #66B33F;
     font-weight: 100;
     text-shadow: 0 0 50px #66B33F, 0 0 3px #fff;
+    font-size: 3em;
 }
 .deck-container .slide h2 {
     color: #000;
@@ -61,6 +49,7 @@ textarea{
     padding: 10px;
     padding-bottom: 15px;
     border-bottom: 4px solid #66B33F;
+    font-size: 2em;
 }
 .deck-container .slide h3 {
     font-weight: normal;
@@ -166,4 +155,19 @@ textarea{
 /*lookout specific*/
 #title-slide{
     background-image: none;
+}
+
+.large-logo{
+    background: url(../assets/logo-large.png) no-repeat;
+    background-size: contain;
+    width: 80%;
+    min-height: 150px;
+    margin-top: 40px !important;
+}
+
+
+.CodeMirror, .deck-codemirror-result{
+    background-color: #FFF;
+    -webkit-box-shadow:  4px 4px 40px 4px rgba(153, 153, 153, .5);
+    box-shadow:  4px 4px 40px 4px rgba(153, 153, 153, .5);
 }
